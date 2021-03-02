@@ -11,7 +11,7 @@ toc::[]
 
 == What is Destructuring?
 
-Destructuring is a way to concisely bind names to the values inside a data structure. Destructuring allows us to write more concise and readable code.
+Destructuring is a way to create a set of bindings to values within a collection by using an analogous collection as a binding form. A vector form specifies bindings by position in a sequential collection, a map form by key in an associative collection. Destructuring forms can appear anywhere binding symbols can, and thus nest, yielding code that is clearer than using collection accessors.
 
 Consider the following example of extracting and naming values in a vector.
 
@@ -29,7 +29,7 @@ Consider the following example of extracting and naming values in a vector.
 ;= "Line from ( 5 , 10 ) to ( 10 , 20 )"
 ----
 
-This is perfectly valid, but the code extracting and naming the values in the vector obscures our intent. Destructuring allows us to more concisely extract and name important parts of complex data structures to make our code cleaner.
+This is perfectly valid, but the code extracting and naming the values in the vector obscures intent. Destructuring allows us to more concisely extract and name important parts of complex data structures.
 
 [source,clojure]
 ----
@@ -41,15 +41,15 @@ This is perfectly valid, but the code extracting and naming the values in the ve
 ;= "Line from ( 5 , 10 ) to ( 10 , 20 )"
 ----
 
-Rather than explicitly binding each variable, we describe the bindings based on their sequential order. That's a pretty weird statement, "describe the bindings," so let's look at it again.
+Rather than explicitly extract each value, we name the bindings based on where they occur within the target `my-line` data structure which is `[[5 10] [10 20]]`.
 
-We have a data structure `my-line` that looks like this, `[[5 10] [10 20]]`. In our destructuring form we will create a vector containing two elements, `p1` and `p2`, each of which are vectors themselves. This will bind the vector `[5 10]` to the symbol `p1` and the vector `[10 20]` to the symbol `p2`. Since we want to work with the elements of `p1` and `p2` rather than the structures themselves, we destructure `p1` and `p2` within the same let statement. The vector `p1` looks like this, `[5 10]`, so to destructure it, we create a vector containing two elements, `x1` and `y1`. This binds `5` to the symbol `x1` and `10` to the symbol `y1`. The same is repeated for `p2` binding `10` to `x2` and `20` to `y2`. At this point, we now have everything we need to work with our data.
+In our destructuring form we will create a vector containing two elements, `p1` and `p2`, each of which are vectors themselves. This will bind the vector `[5 10]` to the symbol `p1` and the vector `[10 20]` to the symbol `p2`. Since we want to work with the component elements of `p1` and `p2` rather than the structures themselves, we separately destructure `p1` and `p2` within the same `let` statement. The vector `p1` is `[5 10]`, so to destructure it, we create a binding vector containing two elements, `x1` and `y1`. This binds `5` to the symbol `x1` and `10` to the symbol `y1`. The same is repeated for `p2`, binding `10` to `x2` and `20` to `y2`. At this point, we now have everything we need to work with our data.
 
 == Sequential Destructuring
 
-Clojure destructuring is broken up into two categories, sequential destructuring and associative destructuring. Sequential destructuring represents a sequential data structure as a Clojure vector within a let binding.
+Clojure destructuring is broken up into two categories, sequential destructuring and associative destructuring. Sequential destructuring represents a sequential data structure as a Clojure vector within a `let` binding.
 
-This type of destructuring can be used on any kind of data structure that can be traversed in linear time, including lists, vectors, and anything that can produce a sequence.
+This type of destructuring can be used on any kind of data structure that can be traversed in linear time, including lists, vectors, and anything that produces a sequence.
 
 [source,clojure]
 ----
@@ -75,31 +75,31 @@ This type of destructuring can be used on any kind of data structure that can be
 ;= (java.lang.Character java.lang.Character java.lang.Character)
 ----
 
-The key to sequential destructuring is that you bind the values one-by-one to the symbols in the vector. For instance the vector `[x y z]` will match each element one-by-one with the list `'(1 2 3)`.
+The key to sequential destructuring is that you bind the values one-for-one to the symbols in the bindings vector. For instance the vector `[x y z]` will match each element in the list `'(1 2 3)`.
 
-In some cases, the collection you are destructuring isn't the exact same size as the destructuring bindings. If the vector is too small, the extra symbols will be bound to nil.
+In some cases, the target collection isn’t the same size as the destructure bindings. For example, if the vector is too small, the extra symbols will bind to `nil`.
 
 [source,clojure]
 ----
 (def small-list '(1 2 3))
+
 (let [[a b c d e f g] small-list]
   (println a b c d e f g))
 ;= 1 2 3 nil nil nil nil
 ----
 
-On the other hand, if the collection is too large, the extra values are simply ignored.
+On the other hand, if the collection is too large then the extra values are simply ignored.
 
 [source,clojure]
 ----
 (def large-list '(1 2 3 4 5 6 7 8 9 10))
+
 (let [[a b c] large-list]
   (println a b c))
 ;= 1 2 3
 ----
 
-Destructuring gives you total control over the elements that you choose to bind (or not) and how you bind them.
-
-Many times, you don't need access to _every_ element in a collection, only certain ones.
+Destructuring gives you total control over the elements that you choose to bind (or not) and how you bind them. Indeed, many times you don’t need access to every element in a collection, only certain ones.
 
 [source,clojure]
 ----
@@ -117,7 +117,7 @@ Say you want to print the first element on one line and the remainder on another
 ;= Amber Aaron Nick Earl Joe
 ----
 
-This binding works but even using destructuring it's pretty clunky. Instead we can use `&` to combine the tail elements into a sequence.
+This binding works but even using destructuring in this way is pretty clunky. Instead we can use `&` to combine the tail elements into a sequence.
 
 [source,clojure]
 ----
@@ -128,7 +128,7 @@ This binding works but even using destructuring it's pretty clunky. Instead we c
 ;= Amber Aaron Nick Earl Joe
 ----
 
-You can ignore bindings that you don't intend on using by binding them to any symbol of your choosing.
+You can ignore bindings that you don’t intend on using by binding them to any symbol of your choosing. The Clojure idiom is to use an underscore as shown below:
 
 [source,clojure]
 ----
@@ -136,8 +136,6 @@ You can ignore bindings that you don't intend on using by binding them to any sy
   (println "Odd names:" item1 item3 item5))
 ;= Odd names: Michael Aaron Earl
 ----
-
-The convention for this is to use an underscore like above.
 
 You can use `:as all` to bind the entire vector to the symbol `all`.
 
@@ -158,23 +156,25 @@ Let's stop for a bit and look a little further into the types of `:as` and `&`.
 ;= (2 3 4 5) [1 2 3 4 5]
 ----
 
-Here `remaining` is bound to a sequence containing the remaining elements of the `numbers` vector while `all` has been bound to the original `vector`. What happens when we destructure a string instead?
+Above, `remaining` is a sequence containing the remaining elements of the `numbers` vector while `all` binds to the original vector. What happens when we destructure a string instead?
 
 [source,clojure]
 ----
 (def word "Clojure")
+
 (let [[x & remaining :as all] word]
   (apply prn [x remaining all]))
 ;= \C (\l \o \j \u \r \e) "Clojure"
 ----
 
-Here `all` is bound to the original structure (String, vector, list, whatever it may be) and `x` is bound to the character `\C`, and `remaining` is the remaining list of characters.
+Here `all` binds to the original structure (String, vector, list, whatever it may be) and `x` binds to the character `\C`, and `remaining` to the rest.
 
 You can combine any or all of these techniques at the same time at your discretion.
 
 [source,clojure]
 ----
 (def fruits ["apple" "orange" "strawberry" "peach" "pear" "lemon"])
+
 (let [[item1 _ item3 & remaining :as all-fruits] fruits]
   (println "The first and third fruits are" item1 "and" item3)
   (println "These were taken from" all-fruits)
@@ -184,14 +184,14 @@ You can combine any or all of these techniques at the same time at your discreti
 ;= The fruits after them are (peach pear lemon)
 ----
 
-Destructuring can also be nested to get access to arbitrary levels of sequential structure. Let's go back to our vector from the very beginning, `my-line`.
+Destructuring can also nest to gain access to arbitrary levels of sequential structure. Let’s go back to our vector from the very beginning, `my-line`:
 
 [source,clojure]
 ----
 (def my-line [[5 10] [10 20]])
 ----
 
-This vector is comprised of nested vectors that we can access directly.
+This vector contains nested vectors, directly accessible via destructuring.
 
 [source,clojure]
 ----
@@ -213,7 +213,7 @@ When you have nested vectors, you can use `:as` or `&` at any level as well.
 
 == Associative Destructuring
 
-Associative destructuring is similar to sequential destructuring, but applied instead to associative (key-value) structures (including maps, records, vectors, etc). The associative bindings are concerned with concisely extracting values of the map by key.
+Associative destructuring is similar to sequential destructuring, but applied instead to associative (i.e. key/value) structures (including maps, records, vectors, sets, etc). Associative bindings extract values of a target map by key.
 
 Let's first consider an example that extracts values from a map without destructuring:
 
@@ -230,9 +230,9 @@ Let's first consider an example that extracts values from a map without destruct
 ;= Super Co. Philadelphia - The worldwide leader in plastic tableware.
 ----
 
-Note that each line of the let binding is essentially the same - it extracts a value from the map by the name of the key, then binds it to a local with the same name.
+Note that each line of the let binding is essentially the same — it extracts a value from the map by the name of the key, then binds it to a local with the same name.
 
-Below is a first example of doing the same thing with associative destructuring:
+Below is an example of doing the same thing with associative destructuring:
 
 [source,clojure]
 ----
@@ -243,9 +243,9 @@ Below is a first example of doing the same thing with associative destructuring:
 ;= Super Co. Philadelphia - The worldwide leader in plastic tableware.
 ----
 
-The destructuring form is now a map rather than a vector, and instead of a symbol on the left side of the let, we have a map. The keys of the map are the symbols we want to bind in the let. The values of the destructuring map are the keys we will look up in the associative value. Here they are keywords (the most common case), but they could be any key value - numbers, strings, symbols, etc.
+The destructuring form is now a map rather than a vector, and instead of a name on the left side of the `let`, we have a map. The keys of the map are the symbols we want to bind in the `let`. The values of the destructuring map are the keys used to retrieve the elements in the associative structure. Here they are keywords (the most common case), but they could be any key value - numbers, strings, symbols, etc.
 
-Similar to sequential destructuring, if you try to bind a key that is not present in the map, the binding value will be nil.
+Similar to sequential destructuring, if you try to bind a key that is not present in the map, the binding value will be `nil`.
 
 [source,clojure]
 ----
@@ -254,7 +254,7 @@ Similar to sequential destructuring, if you try to bind a key that is not presen
 ;= nil
 ----
 
-Associative destructuring, however, also allows you to supply a default value if the key is not present in the associative value with the `:or` key.
+Associative destructuring also allows you to supply a default value if the key is not present in the associative value using the `:or` directive.
 
 [source,clojure]
 ----
@@ -281,6 +281,7 @@ The `:as` and `:or` keywords can be combined in a single destructuring.
 [source,clojure]
 ----
 (def my-map {:a "A" :b "B" :c 3 :d 4})
+
 (let [{a :a, x :x, :or {x "Not found!"}, :as all} my-map]
   (println "I got" a "from" all)
   (println "Where is x?" x))
@@ -288,7 +289,7 @@ The `:as` and `:or` keywords can be combined in a single destructuring.
 ;= Where is x? Not found!
 ----
 
-You might have noticed that our original example still contains redundant information (the local binding name and the key name) in the associative destructuring form. The `:keys` key can be used to further remove the duplication:
+You might have noticed that our original example still contains redundant information (the local binding name and the key name) in the associative destructuring form. To combat this redundancy, the `:keys` directive helps to remove duplication:
 
 [source,clojure]
 ----
@@ -297,9 +298,9 @@ You might have noticed that our original example still contains redundant inform
 ;= Super Co. Philadelphia - The worldwide leader in plastic tableware.
 ----
 
-This example is exactly the same as the prior version - it binds `name` to `(:name client)`, `location` to `(:location client)`, and `description` to `(:description client)`.
+This example is exactly the same as the prior version — it binds `name` to `(:name client)`, `location` to `(:location client)`, and `description` to `(:description client)`.
 
-The `:keys` key is for associative values with keyword keys, but there are also `:strs` and `:syms` for string and symbol keys respectively. In all of these cases the vector contains symbols which are the local binding names.
+The use of `:keys` is intended for associative structures containing keyword keys but there are also `:strs` and `:syms` for string and symbol keys respectively. In all of these cases the vector contains symbols defining the local binding names.
 
 [source,clojure]
 ----
@@ -316,7 +317,7 @@ The `:keys` key is for associative values with keyword keys, but there are also 
 ;= Jane Doe
 ----
 
-Associative destructuring can be nested and combined with sequential destructuring as needed.
+As you might suspect, associative destructuring nests and combines with sequential destructuring as needed.
 
 [source,clojure]
 ----
@@ -357,7 +358,7 @@ However, it would be nicer to type if we could pass those optional arguments as 
 (configure 12 :debug true)
 ----
 
-To support this style of invocation, associative destructuring also works with lists or sequences of key-value pairs for keyword argument parsing. The sequence comes from the rest arg of a variadic function but is destructured not with sequential destructuring, but with associative destructuring (so a sequence destructured as if it were the key-value pairs in a map):
+To support this style of invocation, associative destructuring also works with sequences of key-value pairs for keyword argument parsing. The keyword arguments received in a function called supporting them results in a map bound in exactly the way described above when detailing `let`:
 
 [source,clojure]
 ----
@@ -376,7 +377,7 @@ To support this style of invocation, associative destructuring also works with l
 ;;val = 12  debug = true  verbose = true
 ----
 
-The use of keyword arguments has fallen in and out of fashion in the Clojure community over the years. They are now mostly used when presenting interfaces that people are expected to type at the REPL or the outermost layers of an API. In general, inner layers of the code find it easier to pass options as an explicit map.
+Clojure currently supports the use of passing an options map or keyword arguments exclusively. You must design your functions to use one approach or the other but not both.
 
 === Namespaced keywords
 
@@ -394,7 +395,7 @@ If the keys in your map are namespaced keywords, you can also use destructuring 
 ;= Franklin is 25 and likes running
 ----
 
-Destructuring namespaced keywords using `:keys` alone can result in local bindings that clash. Because all map destructuring options can be combined, any local binding form can be defined individually.
+Destructuring namespaced keywords using `:keys` alone can result in local bindings that clash. Because all map destructuring options combine, defining each binding individually will help to resolve conflicts.
 
 [source,clojure]
 ----
@@ -408,7 +409,7 @@ Destructuring namespaced keywords using `:keys` alone can result in local bindin
 ;= Franklin is 25 and likes running
 ----
 
-You can even destructure using auto-resolved keywords, which will again be bound to only the name part of the key:
+You can even destructure using auto-resolved keywords, which will again bind to only the name part of the key:
 
 [source,clojure]
 ----
@@ -423,11 +424,11 @@ You can even destructure using auto-resolved keywords, which will again be bound
 ;= Franklin is 25
 ----
 
-Creating and destructuring maps with auto-resolved keywords allow us to write code using a namespace alias (here `p`) that is defined by a `require` in the current namespace, giving us a means of namespace indirection that can be changed at a single place in the code.
+Creating and destructuring maps with auto-resolved keywords allow us to write code using a namespace alias (here `p`) that is defined by a `require` in the current namespace, giving us a means of namespace indirection.
 
-All symbols bound in the context of destructuring can be further destructured - this allows destructuring to be used in a nested fashion for both sequential and associative destructuring. It is less obvious, but this also extends to the symbol defined after `&`.
+Finally, although it may not be immediately obvious, destructuring also extends to the symbol defined after `&`.
 
-This example destructures the `&` seq in place to decode the rest of the arguments as options (note that we are thus destructuring the two arguments sequentially and the rest associatively):
+The following example destructures the `&` seq in place to decode the rest of the arguments as options (note that we are thus destructuring the two arguments sequentially and the rest associatively):
 
 [source,clojure]
 ----
@@ -445,7 +446,7 @@ You can utilize destructuring anywhere that there is an explicit or implicit let
 
 One of the most common places to see destructuring is in pulling apart the arguments passed to a function.
 
-Here we have the standard let x equal this, let y equal that, etc... Again, this is perfectly valid code, it's just verbose.
+Here we have the standard "let x equal this, let y equal that, etc..." Again, this is perfectly valid code, it's just verbose.
 
 [source,clojure]
 ----
@@ -456,7 +457,7 @@ Here we have the standard let x equal this, let y equal that, etc... Again, this
     (println "x:" x ", y:" y ", z:" z)))
 ----
 
-Any time we see code that is using `first`, `second`, `nth`, or `get` to pull apart a data structure, it's likely that destructuring can clean that up - we can start by rewriting the `let`:
+Any time we see code that is using `first`, `second`, `nth`, or `get` to pull apart a data structure, it's likely that destructuring can clean that up. We can start by rewriting the `let`:
 
 [source,clojure]
 ----
@@ -465,7 +466,7 @@ Any time we see code that is using `first`, `second`, `nth`, or `get` to pull ap
     (println "x:" x ", y:" y ", z:" z)))
 ----
 
-When defining a function in clojure, destructuring can be applied on the incoming parameters, just like in a let:
+When defining a function in Clojure, destructuring applies to the incoming parameters, just like in a `let` — indeed, this is an _implicit_ `let` binding:
 
 [source,clojure]
 ----
@@ -473,9 +474,9 @@ When defining a function in clojure, destructuring can be applied on the incomin
   (println "x:" x ", y:" y ", z:" z))
 ----
 
-We have replaced several lines of code that pulled apart the incoming point data with a concise statement about the structure of that data that also binds the data to local values.
+We have replaced several lines of code pulling apart the incoming point data with a concise statement about the structure of that data that also binds the data to local names.
 
-For a more realistic example, let's create a map containing some basic contact information for the infamous John Smith.
+For a more realistic example, let’s create a map containing some basic contact information for the infamous John Smith.
 
 [source,clojure]
 ----
@@ -499,7 +500,7 @@ Now that we have John's personal information we need to access the values within
 ;= You can reach him at 555-555-5555
 ----
 
-This function will associatively destructure the input using the `:keys` shortcut and then print out the contact information that we provided.
+This function will associatively destructure the input using the `:keys` directive and then print out the contact information that we provided.
 
 But what about when we want to send John a nice letter?
 
