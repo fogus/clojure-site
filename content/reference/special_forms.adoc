@@ -241,7 +241,18 @@ These are synchronization primitives that should be avoided in user code. Use th
 [[binding-forms]]
 == Binding Forms (Destructuring)
 
-Clojure supports abstract structural binding, often called destructuring, in `let` binding lists, `fn` parameter lists, and by extension any macro that expands into a `let` or `fn`. A _binding-form_ is a data structure literal containing symbols that are bound to the respective parts of the value provided to it (referred to as __init-expr__ in the Clojure documentation). Destructure bindings are abstract in that a vector literal binds to any sequential data structure, while a map literal binds to an associative data structure, or equivalently, a sequence of alternating key/value pairs.
+The simplest binding form in Clojure is a symbol:
+
+[source,clojure]
+----
+(let [point [1 2]]
+  (println (first point))
+  (println (second point)))
+;= 1
+;= 2
+----
+
+Clojure also supports abstract structural binding called destructuring in `let` binding lists, `fn` parameter lists, and by extension any macro that expands into a `let` or `fn`. A _binding-form_ is a data structure literal containing symbols that are bound to the respective parts of the value provided to it (referred to as __init-expr__ in the Clojure documentation). Destructure bindings are abstract in that a vector literal binds to any sequential data structure, while a map literal binds to an associative data structure, or equivalently, a sequence of alternating key/value pairs.
 
 Binding symbols that don’t match their respective part due to an absence of data (too few elements in a sequential structure, no key in an associative structure, etc) bind to `nil`.
 
