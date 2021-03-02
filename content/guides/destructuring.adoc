@@ -204,9 +204,9 @@ When you have nested vectors, you can use `:as` or `&` at any level as well.
 
 [source,clojure]
 ----
-(let [[[a b :as group1] [c d :as group2]] my-line]
-  (println a b group1)
-  (println c d group2))
+(let [[[x1 y1 :as p1] [x2 y2 :as p2]] my-line]
+  (println x1 y1 p1)
+  (println x2 y2 p2))
 ;= 5 10 [5 10]
 ;= 10 20 [10 20]
 ----
