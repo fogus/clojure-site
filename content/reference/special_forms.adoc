@@ -247,7 +247,7 @@ __Binding-form__s that don’t match their respective part due to an absence of 
 
 === Vector binding destructuring
 
-Vector __binding-expr__s seeks to bind __binding_form__s to values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] sequentially. The basic sequential form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
+Vector __binding-expr__s seek to bind __binding_form__s to values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] sequentially. The basic sequential form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
 
 Finally, also optionally, `:as` followed by a symbol binds that symbol to the entire __init-expr__:
 
@@ -369,7 +369,7 @@ Clojure provides a way to define functions that accept keyword arguments in the 
 -> "1.10.3"
 ----
 
-The map __binding-form__ to the right of the `&` in `glom` is exactly the same shown above. The presence of `:keys` and `:or` directives fill in the details of the incoming bindings, including `pre`, `post`, and `sep`, the latter bound to `"."` by default. Calling `glom` to supply keyword parameters is as follows:
+The map __binding-form__ to the right of the `&` in `glom` is an associate destructuring __binding-form__ detailed above. The presence of `:keys` and `:or` directives fill in the specifics of the incoming bindings, including `pre`, `post`, and `sep`, the latter bound to `"."` by default. Calling `glom` to supply keyword arguments is as follows:
 
 [source,clojure]
 ----
