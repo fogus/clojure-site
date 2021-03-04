@@ -369,7 +369,7 @@ Clojure provides a way to define functions that accept keyword arguments in the 
 -> "1.10.3"
 ----
 
-The map __binding-form__ to the right of the `&` in `glom` is exactly the same shown above. The presense of `:keys` and `:or` directives fill in the details of the incoming bindings, including `pre`, `post`, and `sep`, the latter bound to `"."` by default. Calling `glom` to supply keyword parameters is as follows:
+The map __binding-form__ to the right of the `&` in `glom` is exactly the same shown above. The presence of `:keys` and `:or` directives fill in the details of the incoming bindings, including `pre`, `post`, and `sep`, the latter bound to `"."` by default. Calling `glom` to supply keyword parameters is as follows:
 
 [source,clojure]
 ----
@@ -383,7 +383,7 @@ The map __binding-form__ to the right of the `&` in `glom` is exactly the same s
 -> "v1.10.3-SNAPSHOT"
 ----
 
-That is, having declared `glom` to accept keyword arguments means that the rest args accept any combination of, and any ordering of the key/values associated with the keys `:pre`, `:post`, and `:sep`. As expected, key/value pairs not supplied on invocation bind to `nil` unless a default was supplied as in the case of `:sep`.
+That is, having declared `glom` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:pre`, `:post`, and `:sep`. As expected, key/value pairs not supplied on invocation bind to `nil` unless a default was supplied as in the case of `:sep`.
 
 === Nested destructuring
 
