@@ -254,13 +254,9 @@ Finally, also optionally, `:as` followed by a symbol binds that symbol to the en
 [source,clojure]
 ----
 (let [[a b c & d :as e] [1 2 3 4 5 6 7]]
-  {:first-thing  a
-   :second-thing b
-   :third-thing  c
-   :rest-things  d
-   :all-things   e})
+  [a b c d e])
 
-->{:first-thing 1, :second-thing 2, :third-thing 3, :rest-things (4 5 6 7), :all-things [1 2 3 4 5 6 7]}
+->[1 2 3 (4 5 6 7) [1 2 3 4 5 6 7]]
 ----
 
 These forms can nest:
@@ -271,16 +267,6 @@ These forms can nest:
   [x1 y1 x2 y2])
 
 ->[1 2 3 4]
-----
-
-Strings work too:
-
-[source,clojure]
-----
-(let [[a b & c :as str] "asdjhhfdas"]
-  [a b c str])
-
-->[\a \s (\d \j \h \h \f \d \a \s) "asdjhhfdas"]
 ----
 
 In all of the sequential cases the __binding-form__s in the destructure binding will match the places in the target data structure where the desired values reside.
@@ -360,30 +346,22 @@ Clojure provides a way to define functions that accept keyword arguments in the 
 
 [source,clojure]
 ----
-(defn glom [coll & {:keys [pre post sep] :or {sep "."}}]
-  (str pre
-       (clojure.string/join sep coll)
-       post))
-
-(glom [1 10 3])
--> "1.10.3"
+(defn destr [arg & {:keys [xarg1 xarg2] :or {xarg2 42} :as opts}]
+  [arg xarg1 xarg2 opts])
 ----
 
-The map __binding-form__ to the right of the `&` in `glom` is an associate destructuring __binding-form__ detailed above. The presence of `:keys` and `:or` directives fill in the specifics of the incoming bindings, including `pre`, `post`, and `sep`, the latter bound to `"."` by default. Calling `glom` to supply keyword arguments is as follows:
+The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ detailed above. The presence of `:keys` and `:or` directives fill in the specifics of the incoming bindings, including `xargs1` and `xargs2`, the latter bound to `42` by default. Calling `destr` to supply keyword arguments is as follows:
 
 [source,clojure]
 ----
-(glom [1 10 3] :sep "-")
--> "1-10-3"
+(destr 0 :xarg1 1 :xarg2 2)
+->[0 1 2 {:xarg1 1, :xarg2 2}]
 
-(glom [1 10 3] :pre "v")
--> "v1.10.3"
-
-(glom [1 10 3] :pre "v" :post "-SNAPSHOT")
--> "v1.10.3-SNAPSHOT"
+(destr 0 :xarg1 1)
+->[0 1 42 {:xarg1 1}]
 ----
 
-That is, having declared `glom` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:pre`, `:post`, and `:sep`. As expected, key/value pairs not supplied on invocation bind to `nil` unless a default was supplied as in the case of `:sep`.
+That is, having declared `destr` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:xargs1` and `:xargs2`. As expected, key/value pairs not supplied on invocation bind to `nil` unless a default was supplied as in the case of `:xargs2`.
 
 === Nested destructuring
 
