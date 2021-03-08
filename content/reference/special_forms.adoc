@@ -350,7 +350,7 @@ Clojure provides a way to define functions that accept keyword arguments in the 
   [arg xarg1 xarg2 opts])
 ----
 
-The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ detailed above. The presence of `:keys` and `:or` directives fill in the specifics of the incoming bindings, including `xargs1` and `xargs2`, the latter bound to `42` by default. Calling `destr` to supply keyword arguments is as follows:
+The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ detailed above. Calling `destr` to supply keyword arguments is as follows:
 
 [source,clojure]
 ----
@@ -361,7 +361,21 @@ The map __binding-form__ to the right of the `&` in `destr` is an associative de
 ->[0 1 42 {:xarg1 1}]
 ----
 
-That is, having declared `destr` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:xargs1` and `:xargs2`. As expected, key/value pairs not supplied on invocation bind to `nil` unless a default was supplied as in the case of `:xargs2`.
+That is, having declared `destr` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:xargs1` and `:xargs2`. The function `destr` above is functionally equivalent to the following declaration of `destr2`:
+
+[source,clojure]
+----
+(defn destr2 [arg & kvs]
+  (let [{:as opts} kvs
+        xarg1 (get opts :xarg1)
+        xarg2 (get opts :xarg2 42)]
+    [arg xarg1 xarg2 opts]))
+
+(destr2 0 :xarg1 1)
+->[0 1 42 {:xarg1 1}]
+----
+
+Indeed, the `fn` macro will transform the body of a function taking keyword arguments into roughly that of `destr2`.
 
 === Nested destructuring
 
