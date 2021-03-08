@@ -245,9 +245,9 @@ The simplest __binding-form__ in Clojure is a symbol. However, Clojure also supp
 
 __Binding-form__s that don’t match their respective part due to an absence of data (i.e. too few elements in a sequential structure, no key in an associative structure, etc) bind to `nil`.
 
-=== Vector binding destructuring
+=== Sequence binding destructuring
 
-Vector __binding-expr__s seek to bind __binding_form__s to values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] sequentially. The basic sequential form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
+Vector __binding_form__s sequentially unpack values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] to names. The basic sequential form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
 
 Finally, also optionally, `:as` followed by a symbol binds that symbol to the entire __init-expr__:
 
@@ -273,7 +273,7 @@ In all of the sequential cases the __binding-form__s in the destructure binding 
 
 === Associative destructuring
 
-Associative destructuring seeks to bind __binding-form__s to values in associative collections like maps, sets, vectors, strings, and arrays (the latter three have integer keys) via lookup. It consists of a map of __binding-form-key__ pairs, each symbol bound to the value in the _init-expr_ at the key provided. In addition, and optionally, an `:as` key in the binding form followed by a symbol binds that symbol to the entire __init-expr__. Also optionally, an `:or` key in the binding form followed by another map may be used to supply default values for some or all of the keys if they are not found in the __init-expr__:
+Map __binding-form__s create bindings by looking up values in associative collections like maps, sets, vectors, strings, and arrays (the latter three have integer keys). It consists of a map of __binding-form-key__ pairs, each symbol bound to the value in the _init-expr_ at the key provided. In addition, and optionally, an `:as` key in the binding form followed by a symbol binds that symbol to the entire __init-expr__. Also optionally, an `:or` key in the binding form followed by another map may be used to supply default values for some or all of the keys if they are not found in the __init-expr__:
 
 [source,clojure]
 ----
@@ -339,7 +339,6 @@ Clojure 1.9 adds support for directly destructuring many keys (or symbols) that 
 -> [1 2]
 ----
 
-
 ==== Keyword Arguments
 
 Clojure provides a way to define functions that accept keyword arguments in the __next-param__s of a function call. To define a function that accepts keyword arguments you supply a map destructuring form in the __next-param__ declaration position. For example, consider a function that takes a sequence and optional keyword arguments and returns a string comprised of the values given:
@@ -361,7 +360,7 @@ The map __binding-form__ to the right of the `&` in `destr` is an associative de
 ->[0 1 42 {:xarg1 1}]
 ----
 
-That is, having declared `destr` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key/values associated with the keys `:xargs1` and `:xargs2`. The function `destr` above is functionally equivalent to the following declaration of `destr2`:
+That is, having declared `destr` to accept keyword arguments means that the __rest-args__ accept any combination of, and any ordering of the key-values associated with the keys `:xargs1` and `:xargs2`. The function `destr` above is functionally equivalent to the following declaration of `destr2`:
 
 [source,clojure]
 ----
@@ -375,7 +374,7 @@ That is, having declared `destr` to accept keyword arguments means that the __re
 ->[0 1 42 {:xarg1 1}]
 ----
 
-Indeed, the `fn` macro will transform the body of a function taking keyword arguments into roughly that of `destr2`.
+Indeed, the `fn` macro will transform the body of a function taking keyword arguments into roughly that of `destr2`. As previously mentioned in the section about associative destructuring, map binding forms mechanically create bindings via look-up in associative forms. However, in `destr2` you may have noticed that the __binding-form__ `{:as opts}` received the sequence `kvs` resulting in the map `opts`. While sequences are not associative structures, they are treated as such on the right-hand side of a map binding form where the components of the sequence are alternating key-value pairs.
 
 === Nested destructuring
 
