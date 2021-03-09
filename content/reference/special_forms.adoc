@@ -357,9 +357,7 @@ Keyword arguments are optional trailing variadic arguments of the form `(fun key
 
 The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ <<special_forms#associative-destructuring,detailed above>>.
 
-In `destr` you may have noticed that the __binding-form__ `{:keys [b c] :as opts}` received the __rest-param__ sequence resulting in the map `opts`. While sequences are not associative structures, they are treated as such on the right-hand side of a map binding form where the components of the sequence are alternating key->value pairs.
-
-The map destructuring form in the definition of `destr` above is functionally equivalent to the following declaration of `destr2` which highlights that associative destructuring has built-in support for keyword argument sequences:
+In `destr` you may have noticed that the __binding-form__ `{:keys [b c] :as opts}` received the __rest-param__ sequence resulting in the map `opts`. While sequences are not associative structures, they are treated as such on the right-hand side of a map binding form where the components of the sequence are alternating key->value pairs. This is highlighted in the following defintion of `destr2`:
 
 [source,clojure]
 ----
