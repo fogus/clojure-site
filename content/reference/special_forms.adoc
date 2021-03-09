@@ -344,7 +344,7 @@ Clojure 1.9 adds support for directly destructuring many keys (or symbols) that 
 [[keyword-arguments]]
 ==== Keyword Arguments
 
-Keyword arguments are optional trailing variadic arguments of the form `(fun key value key value)` that can be accessed in the function body via associative destructuriong. To define a function that accepts keyword arguments you supply a map destructuring form in the __rest-param__ declaration position. For example, a function that takes a sequence and optional keyword arguments and returns a vector containing the values is definded as:
+Keyword arguments are optional trailing variadic arguments of the form `(fun key value key value)` that can be accessed in the function body via associative destructuring. To define a function that accepts keyword arguments you supply a map destructuring form in the __rest-param__ declaration position. For example, a function that takes a sequence and optional keyword arguments and returns a vector containing the values is defined as:
 
 [source,clojure]
 ----
@@ -357,7 +357,7 @@ Keyword arguments are optional trailing variadic arguments of the form `(fun key
 
 The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ <<special_forms#associative-destructuring,detailed above>>.
 
-In `destr` you may have noticed that the __binding-form__ `{:keys [b c] :as opts}` received the __rest-param__ sequence resulting in the map `opts`. While sequences are not associative structures, they are treated as such on the right-hand side of a map binding form where the components of the sequence are alternating key->value pairs. This is highlighted in the following defintion of `destr2`:
+In `destr` you may have noticed that the __binding-form__ `{:keys [b c] :as opts}` received the __rest-param__ sequence resulting in the map `opts`. While sequences are not associative structures, they are treated as such on the right-hand side of a map binding form where the components of the sequence are alternating key->value pairs. This is highlighted in the following definition of `destr2`:
 
 [source,clojure]
 ----
@@ -369,6 +369,7 @@ In `destr` you may have noticed that the __binding-form__ `{:keys [b c] :as opts
 ->[0 1 2 (:b 1 :c 2)]
 ----
 
+[[nested-destructuring]]
 === Nested destructuring
 
 Since binding forms can be nested within one another arbitrarily, you can pull apart just about anything:
