@@ -245,9 +245,10 @@ The simplest __binding-form__ in Clojure is a symbol. However, Clojure also supp
 
 __Binding-form__s that don’t match their respective part due to an absence of data (i.e. too few elements in a sequential structure, no key in an associative structure, etc) bind to `nil`.
 
-=== Sequence binding destructuring
+[[sequential-destructuring]]
+=== Sequential destructuring
 
-Vector __binding_form__s sequentially unpack values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] to names. The basic sequential form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
+Vector __binding_form__s sequentially bind values in collections like vectors, lists, seqs, strings, arrays, and anything that supports https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nth[`nth`] to names. The basic sequential destructuring form is a vector of __binding-form__s, which will be bound to successive elements from the __init-expr__, looked up via `nth`. In addition, and optionally, a __binding-form__ following a `&` will be  bound to the remainder of the sequence, i.e. that part not yet bound, and looked up via https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/nthnext[`nthnext`].
 
 Finally, also optionally, `:as` followed by a symbol binds that symbol to the entire __init-expr__:
 
@@ -271,9 +272,10 @@ These forms can nest:
 
 In all of the sequential cases the __binding-form__s in the destructure binding will match the places in the target data structure where the desired values reside.
 
+[[associative-destructuring]]
 === Associative destructuring
 
-Map __binding-form__s create bindings by looking up values in associative collections like maps, sets, vectors, strings, and arrays (the latter three have integer keys). It consists of a map of __binding-form-key__ pairs, each symbol bound to the value in the _init-expr_ at the key provided. In addition, and optionally, an `:as` key in the binding form followed by a symbol binds that symbol to the entire __init-expr__. Also optionally, an `:or` key in the binding form followed by another map may be used to supply default values for some or all of the keys if they are not found in the __init-expr__:
+Map __binding-form__s create bindings by looking up values in associative collections like maps, sets, vectors, strings, and arrays (the latter three have integer keys). It consists of a map of __binding-form-key__ pairs, each __binding-form__ bound to the value in the _init-expr_ at the key provided. In addition, and optionally, an `:as` key in the binding form followed by a symbol binds that symbol to the entire __init-expr__. Also optionally, an `:or` key in the binding form followed by another map may be used to supply default values for some or all of the keys if they are not found in the __init-expr__:
 
 [source,clojure]
 ----
@@ -283,7 +285,7 @@ Map __binding-form__s create bindings by looking up values in associative collec
 ->[5 3 6 {:c 6, :a 5}]
 ----
 
-It is often the case that you will want to bind same-named symbols to the map keys. The `:keys` directive addresses the redundancy often found in the binding __binding-form-key__ pairs:
+It is often the case that you will want to bind symbols with the same name as the corresponding map keys. The `:keys` directive addresses the redundancy often found in the binding __binding-form-key__ pairs:
 
 [source,clojure]
 ----
@@ -339,6 +341,7 @@ Clojure 1.9 adds support for directly destructuring many keys (or symbols) that 
 -> [1 2]
 ----
 
+[[keyword-arguments]]
 ==== Keyword Arguments
 
 Clojure provides a way to define functions that accept keyword arguments in the __next-param__s of a function call. To define a function that accepts keyword arguments you supply a map destructuring form in the __next-param__ declaration position. For example, consider a function that takes a sequence and optional keyword arguments and returns a string comprised of the values given:
@@ -349,7 +352,7 @@ Clojure provides a way to define functions that accept keyword arguments in the 
   [arg xarg1 xarg2 opts])
 ----
 
-The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ detailed above. Calling `destr` to supply keyword arguments is as follows:
+The map __binding-form__ to the right of the `&` in `destr` is an associative destructuring __binding-form__ <<special_forms#associative-destructuring,detailed above>>. Calling `destr` to supply keyword arguments is as follows:
 
 [source,clojure]
 ----
